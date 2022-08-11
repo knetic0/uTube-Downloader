@@ -1,9 +1,9 @@
 from tkinter import *
 from tkinter import ttk
-#from pytube import Youtube
+from pytube import YouTube
 import json
 from tkinter import filedialog
-from tkinter.messagebox import showinfo
+from tkinter.messagebox import showinfo, showerror
 
 class Main:
 	def __init__(self, url: str, quality, directory: str):
@@ -69,12 +69,15 @@ class Main:
 
 	def Download(self):
 		self.url = self.urlGet.get()
-
-		try:
-			if self.select[0] == self.quality[0] and self.dir != "":
-				pass
-		except:
-			print("error")
+		self.yt = YouTube(self.url)
+		if len(self.url) > 1:
+			try:
+				if self.select[0] == self.quality[0] and self.dir != "":
+					pass
+			except:
+				print("error")
+		else:
+			showerror("Error!", "Please Choose a Directory!")
 
 if __name__ == "__main__":
 	Main(None, None, None)
