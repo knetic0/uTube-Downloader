@@ -1,13 +1,17 @@
 from tkinter import *
 from tkinter import ttk
+#from pytube import Youtube
 import json
+from tkinter import filedialog
 
 
 class Main:
-	def __init__(self, url: str, quality: str, directory: str):
+	def __init__(self, url: str, quality, directory: str):
 		self.url = url
 		self.quality = quality
 		self.directory = directory
+
+		self.quality = ["144p", "360p", "720p", "1080p", "MP4"]
 
 		self.root = Tk()
 		self.root.geometry("500x500")
@@ -27,7 +31,7 @@ class Main:
 		self.logoLabel.place(x=-5, y=-5)
 
 		# adding url entry
-		self.url = StringVar()
+		self.urlGet = StringVar()
 		self.urlEntry = ttk.Entry(self.root, textvariable=self.url)
 		self.urlEntry.place(x=int(self.root.winfo_screenwidth()) / 21, y=int(self.root.winfo_screenheight()) / 5, width=self.root.winfo_screenwidth() / 6)
 
@@ -45,10 +49,16 @@ class Main:
 
 		# adding download button
 		self.buttonofDownload = ttk.Button(self.root, text=f"Download!", command=lambda : Main.Download(self))
-		self.buttonofDownload.place(x=int(self.root.winfo_screenwidth()) / 8, y=int(self.root.winfo_screenheight()) / 3.5)
+		self.buttonofDownload.place(x=int(self.root.winfo_screenwidth()) / 8, y=int(self.root.winfo_screenheight()) / 3.35)
+
+		self.fileDir = ttk.Button(self.root, text="Choose Directory", command=lambda : Main.Directory(self))
+		self.fileDir.place(x=int(self.root.winfo_screenwidth()) / 32, y=int(self.root.winfo_screenheight()) / 2.7)
 
 		self.footer = Label(self.root, text="Maded by Mehmet SOLAK\nVersion: 1.0.0", bg="white")
 		self.footer.place(x=int(self.root.winfo_screenwidth()) / 11, y=int(self.root.winfo_screenheight()) / 2.35)
+
+	def Directory(self):
+		self.dir = filedialog.askdirectory()
 
 	def Selection(self):
 		self.select = self.treeview.focus()
@@ -56,8 +66,11 @@ class Main:
 		self.buttonofDownload.config(text=f"{self.select[0]} Download!")
 
 	def Download(self):
+		self.url = self.urlGet.get()
+
 		try:
-			print(self.select[0])
+			if self.select[0] == self.quality[0] and self.dir != "":
+				pass
 		except:
 			print("error")
 
