@@ -3,7 +3,7 @@ from tkinter import ttk
 #from pytube import Youtube
 import json
 from tkinter import filedialog
-
+from tkinter.messagebox import showinfo
 
 class Main:
 	def __init__(self, url: str, quality, directory: str):
@@ -59,6 +59,8 @@ class Main:
 
 	def Directory(self):
 		self.dir = filedialog.askdirectory()
+		if self.dir != "":
+			showinfo("Success!", "File directory Selected!")
 
 	def Selection(self):
 		self.select = self.treeview.focus()
