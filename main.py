@@ -6,12 +6,9 @@ from tkinter import filedialog
 from tkinter.messagebox import showinfo, showerror
 
 class Main:
-	def __init__(self, url: str, quality, directory: str):
-		self.url = url
-		self.quality = quality
-		self.directory = directory
+	def __init__(self):
 
-		self.quality = ["144p", "360p", "720p", "1080p", "MP4"]
+		self.quality = ["144p", "360p", "720p", "Highest", "MP3"]
 
 		self.root = Tk()
 		self.root.geometry("500x500")
@@ -32,7 +29,7 @@ class Main:
 
 		# adding url entry
 		self.urlGet = StringVar()
-		self.urlEntry = ttk.Entry(self.root, textvariable=self.url)
+		self.urlEntry = ttk.Entry(self.root, textvariable=self.urlGet)
 		self.urlEntry.place(x=int(self.root.winfo_screenwidth()) / 21, y=int(self.root.winfo_screenheight()) / 5, width=self.root.winfo_screenwidth() / 6)
 
 		# adding treeview of quality
@@ -43,8 +40,8 @@ class Main:
 		self.treeview.insert("", 'end', values=("144p"))
 		self.treeview.insert("", 'end', values=("360p"))
 		self.treeview.insert("", 'end', values=("720p"))
-		self.treeview.insert("", 'end', values=("1080p"))
-		self.treeview.insert("", 'end', values=("MP4"))
+		self.treeview.insert("", 'end', values=("Highest"))
+		self.treeview.insert("", 'end', values=("MP3"))
 		self.treeview.bind("<Double-1>", lambda x: Main.Selection(self))
 
 		# adding download button
@@ -61,6 +58,8 @@ class Main:
 		self.dir = filedialog.askdirectory()
 		if self.dir != "":
 			showinfo("Success!", "File directory Selected!")
+			self.labelofDir = Label(self.root, text=f"File Path = {self.dir}",fg="green" ,bg="white")
+			self.labelofDir.place(x=int(self.root.winfo_screenwidth()) / 200, y=int(self.root.winfo_screenheight()) / 2.5)
 
 	def Selection(self):
 		self.select = self.treeview.focus()
@@ -73,11 +72,25 @@ class Main:
 		if len(self.url) > 1:
 			try:
 				if self.select[0] == self.quality[0] and self.dir != "":
-					pass
+					self.Downloading = self.yt.streams.filter(progressive=True).first()
+					self.Downloading.download(self.dir)
+				elif self.select[0] == self.quality[1] and self.dir != "":
+					self.Downloading = self.yt.streams.filter(res="360p").first()
+					self.Downloading.download(self.dir)
+				elif self.select[0] == self.quality[2] and self.dir != "":
+					self.Downloading = self.yt.streams.filter(res="720p").first()
+					self.Downloading.download(self.dir)
+				elif self.select[0] == self.quality[3] and self.dir != "":
+					self.Downloading = self.yt.streams.get_highest_resolution()
+					self.Downloading.download(self.dir)
+				elif self.select[0] == self.quality[4] and self.dir != "":
+					self.Downloading = self.yt.streams.filter(only_audio=True).last()
+					self.Downloading.download(self.dir)
+				showinfo("Success!", f"[{self.yt.title}] Video Downloaded!")
 			except:
 				print("error")
 		else:
-			showerror("Error!", "Please Choose a Directory!")
+			showerror("Error!", "Please Choose a Directory or Select Quality!")
 
 if __name__ == "__main__":
-	Main(None, None, None)
+	Main()
