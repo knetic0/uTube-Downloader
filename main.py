@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from pytube import YouTube
 import json
+from pytube.cli import on_progress
 from tkinter import filedialog
 from tkinter.messagebox import showinfo, showerror
 
@@ -68,8 +69,15 @@ class Main:
 
 	def Download(self):
 		self.url = self.urlGet.get()
-		self.yt = YouTube(self.url)
+		self.yt = YouTube(self.url, on_progress_callback=on_progress)
 		if len(self.url) > 1:
+			''' Progress Bar .
+			self.ProgressBar = TopLevel(self.root)
+			self.PB = ttk.ProgressBar(self.ProgressBar, orient = "horizontal", mode="determinate", length=200)	
+			self.PB.place(x=0, y=0)
+			self.UpdateValue = Label(self.ProgressBar, text=update_progress_label())
+			self.UpdateValue.place(x=self.ProgressBar.winfo_screenwidth() / 10,y=self.ProgressBar.winfo_screenheight() / 10)
+			'''
 			try:
 				if self.select[0] == self.quality[0] and self.dir != "":
 					self.Downloading = self.yt.streams.filter(progressive=True).first()
